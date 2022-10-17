@@ -65,7 +65,6 @@
                     endFrame - 1,
                     Math.ceil(scrollFraction * endFrame)
                 );
-                console.log(frameIndex)
                 requestAnimationFrame(() => setImg(frameIndex + 1))
             });
         }
