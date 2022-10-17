@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Apple scroll</title>
+</head>
+<body>
+
+
+    <canvas id="scroll_area" class="scroll-area"></canvas>
+
+    <style>
+        html {
+            height: 100vh;
+        }
+        body {
+            height: 500vh;
+            background: black;
+        }
+        .scroll-area{
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 1200px;
+            height: 700px;
+        }
+    </style>
+    <script>
+
+        const frameCount = 148;
+
+        function preloadImages() {
+            for (let i = 1; i < frameCount; i++) {
+                const img = new Image();
+                img.src = getSrc(i);
+            }
+        };
+
+        function getSrc(index){
+            return `https://www.apple.com/105/media/us/airpods-pro/2019/1299e2f5_9206_4470_b28e_08307a42f19b/anim/sequence/large/01-hero-lightpass/${index.toString().padStart(4, '0')}.jpg`
+        }
+
+        function initCanvas(){
+            const canvas = document.getElementById('scroll_area');
+            const context = canvas.getContext('2d');
+            canvas.width = 1200;
+            canvas.height = 800;
+            const img  = new Image()
+            img.src = getSrc(1);
+            img.onload = () => { context.drawImage(img, 0, 0) }
+
+            function setImg(index){
+                img.src = getSrc(index);
+                context.drawImage(img, 0, 0);
+            }
+
+            window.addEventListener('scroll', () => {
+                const scrollTop = document.querySelector('html').scrollTop;
+                const maxScrollTop = document.querySelector('html').scrollHeight - window.innerHeight;
+                const scrollFraction = scrollTop / maxScrollTop;
+                const frameIndex = Math.min(
+                    frameCount - 1,
+                    Math.ceil(scrollFraction * frameCount)
+                );
+
+                requestAnimationFrame(() => setImg(frameIndex + 1))
+            });
+        }
+
+        preloadImages();
+        initCanvas();
+    </script>
+</body>
+</html>
